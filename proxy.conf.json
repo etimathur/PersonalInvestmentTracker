@@ -1,0 +1,7 @@
+{
+  "/api": {
+    "target": "https://mfnav.in",
+    "secure": true,
+    "changeOrigin": true
+  }
+}

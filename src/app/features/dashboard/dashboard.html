@@ -1,0 +1,25 @@
+<div class="summary-card">
+  <div class="summary-item">
+    <h3>Total Invested</h3>
+    <p>{{ this.totalInvestment() | currency:'INR' }}</p>
+  </div>
+
+  <div class="summary-item">
+    <h3>Current Value</h3>
+    <p>{{ this.currentValue() | currency:'INR' }}</p>
+  </div>
+
+  <div class="summary-item">
+    <h3>Profit/Loss</h3>
+    <p>{{ this.profitLoss() | currency:'INR' }}</p>
+  </div>
+
+  <div class="summary-item">
+    <h3>Returns</h3>
+    <p>{{ this.profitLossPercentage() | number:'1.2-2' }}%</p>
+  </div>
+</div>
+<div>
+  <app-portfolio></app-portfolio>
+  <app-add-portfolio></app-add-portfolio>
+</div>

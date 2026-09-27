@@ -1,0 +1,10 @@
+<div>
+    @for (portfolio of portfolios(); track portfolio.id) {
+      <div class="portfolio-card">
+        <h3>{{ portfolio.fundName }}</h3><button (click)="removePortfolio(portfolio.id)">Delete</button>
+        <p>Monthly Amount: {{ portfolio.monthlyAmount }}</p>
+        <p>Category: {{ portfolio.category }}</p>
+        <p>Expected Returns: {{ portfolio.expectedReturns }} </p>
+      </div>
+    }
+</div>

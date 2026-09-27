@@ -1,0 +1,67 @@
+<div class="form-container">
+  <h2>Add New SIP</h2>
+
+  <form [formGroup]="portFolioForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="name">Fund Name</label>
+      <input
+        id="name"
+        type="text"
+        placeholder="Enter fund name"
+        formControlName="fundName"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="amount">Monthly Amount</label>
+      <input
+        id="amount"
+        type="number"
+        placeholder="Enter Monthly Amount"
+        formControlName="monthlyAmount"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="date">Start Date</label>
+      <input
+        id="date"
+        type="date"
+        formControlName="startDate"
+        required
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" formControlName="category">
+        <option value="Equity" default>Equity</option>
+        <option value="Debt">Debt</option>
+        <option value="Hybrid">Hybrid</option>
+        <option value="Gold">Gold</option>
+        <option value="International">International</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="returns">Expected Returns</label>
+      <input
+        id="returns"
+        type="number"
+        placeholder="Enter Expected Returns"
+        formControlName="expectedReturns"
+        required
+      >
+    </div>
+
+    <button
+      type="submit"
+      [disabled]="portFolioForm.invalid">
+      {{ portFolioForm.value.schemeCode ? 'Update Portfolio' : 'Add Portfolio' }}
+    </button>
+
+  </form>
+</div>
