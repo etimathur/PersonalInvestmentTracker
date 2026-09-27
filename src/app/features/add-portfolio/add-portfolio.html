@@ -4,14 +4,43 @@
   <form [formGroup]="portFolioForm" (ngSubmit)="onSubmit()">
 
     <div class="form-group">
-      <label for="name">Fund Name</label>
+      <label for="fund-search">Search mutual funds</label>
       <input
-        id="name"
+        id="fund-search"
         type="text"
-        placeholder="Enter fund name"
-        formControlName="fundName"
-        required
+        placeholder="Search by fund name"
+        [formControl]="fundSearchControl"
+        autocomplete="off"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-haspopup="listbox"
+        aria-controls="fund-options"
+        [attr.aria-expanded]="fundOptions.length > 0"
+        [attr.aria-activedescendant]="activeFundOptionId"
+        (keydown)="onFundSearchKeydown($event)"
       />
+      @if (isLoading) {
+        <p class="search-message" role="status">Searching mutual funds…</p>
+      } @else if (searchError) {
+        <p class="search-message error" role="alert">{{ searchError }}</p>
+      } @else if (hasSearched && fundOptions.length === 0) {
+        <p class="search-message" role="status">No mutual funds found.</p>
+      }
+      <ul id="fund-options" class="fund-options" role="listbox" [hidden]="fundOptions.length === 0">
+        @for (fund of fundOptions; track fund.scheme_code; let index = $index) {
+          <li
+            [id]="'fund-option-' + fund.scheme_code"
+            class="fund-option"
+            [class.active]="activeFundIndex === index"
+            role="option"
+            [attr.aria-selected]="activeFundIndex === index"
+            (mousedown)="$event.preventDefault()"
+            (click)="selectFund(fund)"
+          >
+            {{ fund.scheme_name }} ({{ fund.scheme_code }})
+          </li>
+        }
+      </ul>
     </div>
 
     <div class="form-group">
@@ -59,8 +88,8 @@
 
     <button
       type="submit"
-      [disabled]="portFolioForm.invalid">
-      {{ portFolioForm.value.schemeCode ? 'Update Portfolio' : 'Add Portfolio' }}
+      [disabled]="portFolioForm.invalid || !selectedFund">
+      Add Portfolio
     </button>
 
   </form>

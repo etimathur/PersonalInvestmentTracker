@@ -1,5 +1,6 @@
 import { Component, Input, Signal } from '@angular/core';
 import { PortfolioService } from '../../core/services/portfolio.service';
+import { SIP } from '../../core/models/sip.model';
 
 @Component({
   imports: [],

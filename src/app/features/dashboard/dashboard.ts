@@ -3,6 +3,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
 import { Portfolio } from '../portfolio/portfolio';
 import { CommonModule } from '@angular/common';
 import { AddPortfolio } from '../add-portfolio/add-portfolio';
+import { SIP } from '../../core/models/sip.model';
 
 @Component({
   imports: [Portfolio, CommonModule, AddPortfolio],

@@ -1,4 +1,4 @@
-interface SIP {
+export interface SIP {
     id: number;
     schemeCode: string;
     fundName: string;

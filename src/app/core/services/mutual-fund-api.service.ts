@@ -1,5 +1,7 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { MutualFundSearchResponse } from '../models/mutual-fund.model';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +9,21 @@ import { HttpClient } from "@angular/common/http";
 
 export class MutualFundApiService {
 
-    constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-    public getSearchedMutualFunds(searchTerm: string) {
-        return this.httpClient.get(`api/funds/search?q=${searchTerm}&page=1&page_size=2`);
-    }
+  public getSearchedMutualFunds(
+    searchTerm: string,
+    page = 1,
+    pageSize = 10,
+  ): Observable<MutualFundSearchResponse> {
+    const params = new HttpParams()
+      .set('q', searchTerm)
+      .set('page', page)
+      .set('page_size', pageSize);
+
+    return this.httpClient.get<MutualFundSearchResponse>(
+      '/api/funds/search',
+      { params },
+    );
+  }
 }

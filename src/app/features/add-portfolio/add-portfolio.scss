@@ -47,6 +47,42 @@
   border-color: #4CAF50;
 }
 
+.search-message,
+.selected-fund {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.search-message.error {
+  color: #b3261e;
+}
+
+.fund-options {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fund-option {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  color: #333;
+  border-radius: 0;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fund-option:hover,
+.fund-option.active {
+  background: #f2f7f2;
+}
+
 button {
   width: 100%;
   padding: 12px;
