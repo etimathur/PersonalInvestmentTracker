@@ -1,39 +1,48 @@
 import { computed, Injectable, signal } from "@angular/core";
 import { SIP } from "../models/sip.model";
+import { HttpClient } from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioService {
 
+    constructor(private http: HttpClient) { }
+
     private portfolios = signal<SIP[]>([
-        {
-            id: 1,
-            schemeCode: '123456',
-            fundName: 'ABC Equity Fund',
-            monthlyAmount: 5000,
-            startDate: new Date('2022-01-01'),
-            category: 'Equity',
-            expectedReturns: 12
-        },
-        {
-            id: 2,
-            schemeCode: '654321',
-            fundName: 'XYZ Debt Fund',
-            monthlyAmount: 3000,
-            startDate: new Date('2021-06-15'),
-            category: 'Debt',
-            expectedReturns: 8
-        }
     ]);
 
     readonly portfoliosSignal = this.portfolios.asReadonly();
+    private readonly apiUrl = 'http://localhost:5143/api/Sips';
 
+    public loadPortfolios(): void {
+        this.http.get<SIP[]>(this.apiUrl).subscribe({
+            next: data => this.portfolios.set(data)
+        });
+    }
     public addPortfolio(portfolio: SIP): void {
-        this.portfolios.update(prev => [...prev, portfolio]);
+        const { id, ...sipWithoutId } = portfolio;
+
+        this.http.post<SIP>(this.apiUrl, sipWithoutId).subscribe({
+            next: data => {
+                this.portfolios.update(prev => [...prev, data]);
+            }
+        });
     }
 
     public removePortfolio(portfolioId: number): void {
-        this.portfolios.update(prev => prev.filter(p => p.id !== portfolioId));
+        this.http.delete(this.apiUrl + "/" + portfolioId).subscribe({
+            next: () => {
+                this.portfolios.update(prev => prev.filter(p => p.id !== portfolioId));
+            }
+        });
+    }
+
+    public updatePortfolio(portfolio: SIP): void {
+        this.http.put<SIP>(this.apiUrl + "/" + portfolio.id, portfolio).subscribe({
+            next: data => {
+                this.portfolios.update(prev => prev.map(p => p.id === data.id ? data : p));
+            }
+        });
     }
 
     public monthlyInvestmentTotal = computed(() => {

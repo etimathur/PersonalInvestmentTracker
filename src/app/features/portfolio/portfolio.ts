@@ -12,6 +12,7 @@ export class Portfolio {
   public portfolios: Signal<SIP[]>;
 
   constructor(private portfolioService: PortfolioService) {
+    this.portfolioService.loadPortfolios();
     this.portfolios = this.portfolioService.portfoliosSignal;
   }
 
