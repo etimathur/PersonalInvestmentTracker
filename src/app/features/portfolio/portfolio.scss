@@ -1,0 +1,120 @@
+.portfolio-page {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.page-heading {
+  margin-bottom: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--color-primary);
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+}
+
+.page-description {
+  margin: 0.5rem 0 0;
+  color: var(--color-muted);
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1rem;
+}
+
+.portfolio-card {
+  min-width: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card-heading h2 {
+  overflow-wrap: anywhere;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.delete-button {
+  flex: 0 0 auto;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #edcaca;
+  border-radius: 0.5rem;
+  color: var(--color-danger);
+  background: #fff8f7;
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  border-color: var(--color-danger);
+  background: #fff0ee;
+}
+
+.portfolio-details {
+  display: grid;
+  gap: 0.8rem;
+  margin: 1.25rem 0 0;
+}
+
+.portfolio-details div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid #edf1ef;
+  padding-top: 0.7rem;
+}
+
+.portfolio-details dt {
+  color: var(--color-muted);
+}
+
+.portfolio-details dd {
+  overflow-wrap: anywhere;
+  margin: 0;
+  font-weight: 650;
+  text-align: right;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed #b7c9c0;
+  border-radius: 1rem;
+  color: var(--color-muted);
+  background: rgb(255 255 255 / 70%);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .portfolio-page {
+    width: calc(100% - 1.5rem);
+  }
+
+  .portfolio-card {
+    padding: 1rem;
+  }
+}

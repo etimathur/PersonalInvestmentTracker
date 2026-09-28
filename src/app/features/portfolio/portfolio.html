@@ -1,10 +1,43 @@
-<div>
-    @for (portfolio of portfolios(); track portfolio.id) {
-      <div class="portfolio-card">
-        <h3>{{ portfolio.fundName }}</h3><button (click)="removePortfolio(portfolio.id)">Delete</button>
-        <p>Monthly Amount: {{ portfolio.monthlyAmount }}</p>
-        <p>Category: {{ portfolio.category }}</p>
-        <p>Expected Returns: {{ portfolio.expectedReturns }} </p>
-      </div>
-    }
-</div>
+<section class="portfolio-page" aria-labelledby="portfolio-title">
+  <header class="page-heading">
+    <div>
+      <p class="eyebrow">Your investments</p>
+      <h1 id="portfolio-title">Portfolio</h1>
+      <p class="page-description">Review the SIPs you are currently tracking.</p>
+    </div>
+  </header>
+
+  @if (portfolios().length === 0) {
+    <p class="empty-state">Your portfolio is empty.</p>
+  } @else {
+    <div class="portfolio-grid">
+      @for (portfolio of portfolios(); track portfolio.id) {
+        <article class="portfolio-card">
+          <div class="card-heading">
+            <h2>{{ portfolio.fundName }}</h2>
+            <button
+              type="button"
+              class="delete-button"
+              [attr.aria-label]="'Delete ' + portfolio.fundName"
+              (click)="removePortfolio(portfolio.id)"
+            >Delete</button>
+          </div>
+          <dl class="portfolio-details">
+            <div>
+              <dt>Monthly amount</dt>
+              <dd>{{ portfolio.monthlyAmount }}</dd>
+            </div>
+            <div>
+              <dt>Category</dt>
+              <dd>{{ portfolio.category }}</dd>
+            </div>
+            <div>
+              <dt>Expected returns</dt>
+              <dd>{{ portfolio.expectedReturns }}%</dd>
+            </div>
+          </dl>
+        </article>
+      }
+    </div>
+  }
+</section>

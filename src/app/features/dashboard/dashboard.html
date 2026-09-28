@@ -1,25 +1,27 @@
-<div class="summary-card">
-  <div class="summary-item">
-    <h3>Total Invested</h3>
-    <p>{{ this.totalInvestment() | currency:'INR' }}</p>
+<section class="dashboard-page" aria-labelledby="dashboard-title">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Overview</p>
+      <h1 id="dashboard-title">Your dashboard</h1>
+      <p class="page-description">A snapshot of your systematic investments.</p>
+    </div>
   </div>
-
-  <div class="summary-item">
-    <h3>Current Value</h3>
-    <p>{{ this.currentValue() | currency:'INR' }}</p>
+  <div class="summary-card" aria-label="Investment summary">
+    <article class="summary-item">
+      <h2>Total Invested</h2>
+      <p>{{ totalInvestment() | currency:'INR' }}</p>
+    </article>
+    <article class="summary-item">
+      <h2>Current Value</h2>
+      <p>{{ currentValue() | currency:'INR' }}</p>
+    </article>
+    <article class="summary-item">
+      <h2>Profit/Loss</h2>
+      <p>{{ profitLoss() | currency:'INR' }}</p>
+    </article>
+    <article class="summary-item">
+      <h2>Returns</h2>
+      <p>{{ profitLossPercentage() | number:'1.2-2' }}%</p>
+    </article>
   </div>
-
-  <div class="summary-item">
-    <h3>Profit/Loss</h3>
-    <p>{{ this.profitLoss() | currency:'INR' }}</p>
-  </div>
-
-  <div class="summary-item">
-    <h3>Returns</h3>
-    <p>{{ this.profitLossPercentage() | number:'1.2-2' }}%</p>
-  </div>
-</div>
-<div>
-  <app-portfolio></app-portfolio>
-  <app-add-portfolio></app-add-portfolio>
-</div>
+</section>

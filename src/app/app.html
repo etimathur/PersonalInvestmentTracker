@@ -1,3 +1,24 @@
-<b>Personal Investment Tracker</b>
-
-<router-outlet></router-outlet>
+<div class="app-shell">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" routerLink="/" aria-label="Personal Investment Tracker home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span>Personal Investment Tracker</span>
+      </a>
+      <nav class="primary-nav" aria-label="Main navigation">
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >Dashboard</a>
+        <a routerLink="/portfolio" routerLinkActive="active" ariaCurrentWhenActive="page">Portfolio</a>
+        <a routerLink="/add-portfolio" routerLinkActive="active" ariaCurrentWhenActive="page">Add SIP</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content" class="app-main" tabindex="-1">
+    <router-outlet></router-outlet>
+  </main>
+</div>
