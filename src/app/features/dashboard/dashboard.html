@@ -6,6 +6,7 @@
       <p class="page-description">A snapshot of your systematic investments.</p>
     </div>
   </div>
+
   <div class="summary-card" aria-label="Investment summary">
     <article class="summary-item">
       <h2>Total Invested</h2>
@@ -23,5 +24,144 @@
       <h2>Returns</h2>
       <p>{{ profitLossPercentage() | number:'1.2-2' }}%</p>
     </article>
+  </div>
+
+  <div class="chart-card" aria-labelledby="portfolio-performance-heading">
+    <div class="chart-header">
+      <h2 id="portfolio-performance-heading">Portfolio value history</h2>
+    </div>
+
+    <ng-container *ngIf="portfolioHistoryLoading()">
+      <p class="chart-status loading" aria-live="polite">Loading portfolio history…</p>
+    </ng-container>
+
+    <ng-container *ngIf="!portfolioHistoryLoading() && portfolioHistoryError()">
+      <p class="chart-status error" role="alert">{{ portfolioHistoryError() }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="!portfolioHistoryLoading() && !portfolioHistoryError() && portfolioHistory().length === 0">
+      <p class="chart-status empty">No portfolio history available yet.</p>
+    </ng-container>
+
+    <div class="chart-wrapper" *ngIf="!portfolioHistoryLoading() && !portfolioHistoryError() && portfolioHistory().length > 0">
+      <svg
+        class="portfolio-history-chart"
+        [attr.viewBox]="'0 0 ' + portfolioHistoryChart().width + ' ' + portfolioHistoryChart().height"
+        role="img"
+        [attr.aria-label]="'Portfolio value trend across ' + portfolioHistory().length + ' months'"
+      >
+        <g *ngFor="let tick of portfolioHistoryChart().yTicks">
+          <line
+            [attr.x1]="portfolioHistoryChart().padding.left"
+            [attr.x2]="portfolioHistoryChart().width - portfolioHistoryChart().padding.right"
+            [attr.y1]="tick.y"
+            [attr.y2]="tick.y"
+            class="chart-gridline"
+          ></line>
+          <text [attr.x]="12" [attr.y]="tick.y + 4" class="chart-axis-text">{{ tick.label }}</text>
+        </g>
+
+        <path [attr.d]="portfolioHistoryChart().path" class="chart-line"></path>
+
+        <g *ngFor="let point of portfolioHistoryChart().dots; let index = index">
+          <circle [attr.cx]="point.x" [attr.cy]="point.y" r="4.5" class="chart-point"></circle>
+        </g>
+
+        <g *ngFor="let label of portfolioHistoryChart().labels">
+          <text [attr.x]="label.x" [attr.y]="portfolioHistoryChart().height - 18" [attr.text-anchor]="label.anchor" class="chart-axis-text">{{ label.text }}</text>
+        </g>
+      </svg>
+      <ol class="sr-only" aria-live="polite">
+        <li *ngFor="let point of portfolioHistory()">
+          {{ point.date }}: {{ formatCurrency(point.value) }}
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="chart-card" aria-labelledby="fund-performance-heading">
+    <div class="chart-header">
+      <h2 id="fund-performance-heading">Fund performance</h2>
+    </div>
+    <div class="chart-legend" aria-label="Fund graph legend">
+      <span><span class="legend-dot invested" aria-hidden="true"></span> Invested</span>
+      <span><span class="legend-dot current" aria-hidden="true"></span> Current value</span>
+    </div>
+
+    <ng-container *ngIf="fundPerformanceLoading()">
+      <p class="chart-status loading" aria-live="polite">Loading fund comparison…</p>
+    </ng-container>
+
+    <ng-container *ngIf="!fundPerformanceLoading() && fundPerformanceError()">
+      <p class="chart-status error" role="alert">{{ fundPerformanceError() }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="!fundPerformanceLoading() && !fundPerformanceError() && fundPerformance().length === 0">
+      <p class="chart-status empty">No fund performance data available yet.</p>
+    </ng-container>
+
+    <div class="chart-wrapper" *ngIf="!fundPerformanceLoading() && !fundPerformanceError() && fundPerformance().length > 0">
+      <svg
+        class="fund-performance-chart"
+        [attr.viewBox]="'0 0 ' + fundPerformanceChart().width + ' ' + fundPerformanceChart().height"
+        role="img"
+        [attr.aria-label]="'Invested and current values for ' + fundPerformance().length + ' funds'"
+      >
+        <g *ngFor="let tick of fundPerformanceChart().axisTicks">
+          <line
+            [attr.x1]="tick.x"
+            [attr.x2]="tick.x"
+            [attr.y1]="fundPerformanceChart().padding.top"
+            [attr.y2]="fundPerformanceChart().height - fundPerformanceChart().padding.bottom"
+            class="chart-gridline"
+          ></line>
+          <text [attr.x]="tick.x" [attr.y]="fundPerformanceChart().height - 22" text-anchor="middle" class="chart-axis-text">{{ tick.label }}</text>
+        </g>
+
+        <g *ngFor="let row of fundPerformanceChart().rows">
+          <title>{{ row.fundName }}</title>
+          <line
+            [attr.x1]="row.investedX"
+            [attr.x2]="row.currentX"
+            [attr.y1]="row.y"
+            [attr.y2]="row.y"
+            class="fund-connector"
+          ></line>
+
+          <circle [attr.cx]="row.investedX" [attr.cy]="row.y" r="5" class="fund-dot invested-dot"></circle>
+          <circle [attr.cx]="row.currentX" [attr.cy]="row.y" r="5" class="fund-dot current-dot"></circle>
+
+          <text [attr.x]="fundPerformanceChart().padding.left - 12" [attr.y]="row.y + 4" text-anchor="end" class="fund-name-text">{{ formatFundName(row.fundName) }}</text>
+          <text [attr.x]="row.investedLabelX" [attr.y]="row.y - 12" [attr.text-anchor]="row.investedLabelAnchor" class="chart-point-label">{{ formatCurrency(row.investedValue) }}</text>
+          <text [attr.x]="row.currentLabelX" [attr.y]="row.y - 12" [attr.text-anchor]="row.currentLabelAnchor" class="chart-point-label">{{ formatCurrency(row.currentValue) }}</text>
+
+          <text
+            *ngIf="row.returnValue >= 0"
+            [attr.x]="fundPerformanceChart().width - 18"
+            [attr.y]="row.y + 4"
+            text-anchor="end"
+            class="fund-return positive"
+          >
+            {{ row.returnLabel }}
+          </text>
+          <text
+            *ngIf="row.returnValue < 0"
+            [attr.x]="fundPerformanceChart().width - 18"
+            [attr.y]="row.y + 4"
+            text-anchor="end"
+            class="fund-return negative"
+          >
+            {{ row.returnLabel }}
+          </text>
+        </g>
+      </svg>
+      <ol class="sr-only">
+        <li *ngFor="let fund of fundPerformance()">
+          {{ fund.fundName }}: invested {{ formatCurrency(fund.totalInvested) }},
+          current value {{ formatCurrency(fund.currentValue) }},
+          returns {{ formatSignedCurrency(fund.returns) }}
+        </li>
+      </ol>
+    </div>
   </div>
 </section>

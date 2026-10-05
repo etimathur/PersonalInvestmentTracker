@@ -1,6 +1,12 @@
 import { computed, Injectable, signal } from "@angular/core";
-import { SIP } from "../models/sip.model";
 import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { SIP } from "../models/sip.model";
+import {
+  FundPerformanceResult,
+  PortfolioPerformancePoint,
+} from "../models/portfolio-performance.model";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,11 +18,13 @@ export class PortfolioService {
     ]);
 
     readonly portfoliosSignal = this.portfolios.asReadonly();
-    private readonly apiUrl = 'http://localhost:5143/api/Sips';
+    private readonly apiUrl = 'https://personal-investment-tracker-api-azghfvcdb4afhuf8.centralindia-01.azurewebsites.net/api/Sips';
 
     public loadPortfolios(): void {
         this.http.get<SIP[]>(this.apiUrl).subscribe({
-            next: data => this.portfolios.set(data)
+            next: data => {
+                this.portfolios.set(data);
+            }
         });
     }
     public addPortfolio(portfolio: SIP): void {
@@ -57,29 +65,18 @@ export class PortfolioService {
             var months =
                 (today.getFullYear() - start.getFullYear()) * 12 +
                 (today.getMonth() - start.getMonth());
-            if(today.getDate() < start.getDate()) {
-                months--;
-            }
             return total + (portfolio.monthlyAmount * months);
         }, 0);
     });
 
-    public currentValue = computed(() => {
-        return this.portfolios().reduce((total, portfolio) => {
-            const start = new Date(portfolio.startDate);
-            const today = new Date();
-
-            var months =
-                (today.getFullYear() - start.getFullYear()) * 12 +
-                (today.getMonth() - start.getMonth());
-            if(today.getDate() < start.getDate()) {
-                months--;
+    public currentValue = signal(0);
+    public loadCurrentValue(): void {
+        this.http.get<number>(this.apiUrl + "/currentPortfolioValue").subscribe({
+            next: data => {
+                this.currentValue.set(data);
             }
-            const investedAmount = portfolio.monthlyAmount * months;
-            const currentValue = investedAmount * (1 + portfolio.expectedReturns / 100);
-            return total + currentValue;
-        }, 0);
-    });
+        });
+    }
 
     public profitLoss = computed(() => {
         return this.currentValue() - this.totalInvestment();
@@ -92,4 +89,12 @@ export class PortfolioService {
         }
         return (this.profitLoss() / totalInvestment) * 100;
     });
+
+    public getPortfolioPerformance(): Observable<PortfolioPerformancePoint[]> {
+        return this.http.get<PortfolioPerformancePoint[]>(this.apiUrl + "/portfolioPerformance");
+    }
+
+    public getFundPerformance(): Observable<FundPerformanceResult[]> {
+        return this.http.get<FundPerformanceResult[]>(this.apiUrl + "/fundPerformance");
+    }
 }

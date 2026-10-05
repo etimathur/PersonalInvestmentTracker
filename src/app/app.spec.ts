@@ -28,8 +28,11 @@ describe('App routing and shell', () => {
             profitLoss: signal(120),
             profitLossPercentage: signal(10),
             loadPortfolios,
+            loadCurrentValue: vi.fn(),
             addPortfolio: vi.fn(),
             removePortfolio: vi.fn(),
+            getPortfolioPerformance: vi.fn(() => of([])),
+            getFundPerformance: vi.fn(() => of([])),
           },
         },
         {
