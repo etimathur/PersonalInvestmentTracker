@@ -92,7 +92,7 @@ export class AddPortfolio implements OnInit, OnDestroy {
               this.hasSearched = true;
               this.changeDetectorRef.markForCheck();
             }),
-            switchMap(() => this.mutualFundApiService.getSearchedMutualFunds(term, 1, 10)),
+            switchMap(() => this.mutualFundApiService.getSearchedMutualFunds(term)),
             catchError(() => {
               if (requestId === this.searchRequestId) {
                 this.searchError = 'Unable to search mutual funds. Please try again.';

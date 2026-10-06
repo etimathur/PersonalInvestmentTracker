@@ -13,16 +13,12 @@ export class MutualFundApiService {
 
   public getSearchedMutualFunds(
     searchTerm: string,
-    page = 1,
-    pageSize = 10,
   ): Observable<MutualFundSearchResponse> {
     const params = new HttpParams()
-      .set('q', searchTerm)
-      .set('page', page)
-      .set('page_size', pageSize);
+      .set('query', searchTerm)
 
     return this.httpClient.get<MutualFundSearchResponse>(
-      '/api/funds/search',
+      'https://personal-investment-tracker-api-azghfvcdb4afhuf8.centralindia-01.azurewebsites.net/api/funds/search',
       { params },
     );
   }
